@@ -17,21 +17,26 @@
   the iteration process.
 -->
 
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [single/web/mobile - determines source structure]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Language/Version**: Python 3.8+
+**Primary Dependencies**: argparse or click, pytest, JSON or SQLite
+**Storage**: Local file system (JSON, SQLite)
+**Testing**: pytest
+**Target Platform**: Cross-platform (Windows, macOS, Linux)
+**Project Type**: Single console application
+**Performance Goals**: Application starts within 2 seconds, List operations complete within 100ms for up to 1000 tasks
+**Constraints**: <100MB memory, offline-capable, CLI-focused
+**Scale/Scope**: Individual user, single-machine application
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- Clean CLI Interface: Verify all user interactions follow CLI best practices
+- Persistent Local Storage: Confirm data persistence approach aligns with requirements
+- Test-First: Ensure test strategy includes comprehensive unit and integration tests
+- Python Best Practices: Verify code follows PEP 8, type hints, and modular design
+- Error Handling: Confirm error handling strategy is comprehensive
+- Modularity: Verify architecture supports maintainability and future enhancements
 
 ## Project Structure
 
@@ -56,39 +61,37 @@ specs/[###-feature]/
 -->
 
 ```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
+# Single console application (DEFAULT)
 src/
 ├── models/
+│   ├── __init__.py
+│   └── todo_item.py          # Defines the TodoItem data model
 ├── services/
+│   ├── __init__.py
+│   └── todo_service.py       # Handles business logic for todo operations
+├── storage/
+│   ├── __init__.py
+│   └── file_storage.py       # Handles local file persistence
 ├── cli/
-└── lib/
+│   ├── __init__.py
+│   └── cli_app.py            # CLI interface and command routing
+└── __init__.py
 
 tests/
-├── contract/
+├── unit/
+│   ├── test_models/
+│   ├── test_services/
+│   └── test_storage/
 ├── integration/
-└── unit/
+│   └── test_cli_integration.py
+└── conftest.py               # Test configuration
 
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
+config/
+├── __init__.py
+└── settings.py               # Application configuration
 
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
-
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+docs/
+└── quickstart.md             # User quickstart guide
 ```
 
 **Structure Decision**: [Document the selected structure and reference the real

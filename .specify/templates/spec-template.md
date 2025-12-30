@@ -84,16 +84,16 @@
 
 ### Functional Requirements
 
-- **FR-001**: System MUST [specific capability, e.g., "allow users to create accounts"]
-- **FR-002**: System MUST [specific capability, e.g., "validate email addresses"]  
-- **FR-003**: Users MUST be able to [key interaction, e.g., "reset their password"]
-- **FR-004**: System MUST [data requirement, e.g., "persist user preferences"]
-- **FR-005**: System MUST [behavior, e.g., "log all security events"]
+- **FR-001**: System MUST provide a clean CLI interface for managing to-do items
+- **FR-002**: System MUST persist to-do data locally between application sessions
+- **FR-003**: Users MUST be able to add, list, update, and delete to-do items
+- **FR-004**: System MUST handle user input validation and provide clear error messages
+- **FR-005**: System MUST follow Python best practices including PEP 8 and type hints
 
 *Example of marking unclear requirements:*
 
-- **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
-- **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
+- **FR-006**: System MUST provide data export functionality [NEEDS CLARIFICATION: export format not specified - JSON, CSV, other?]
+- **FR-007**: System MUST support data backup [NEEDS CLARIFICATION: backup location and frequency not specified]
 
 ### Key Entities *(include if feature involves data)*
 
