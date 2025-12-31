@@ -43,14 +43,14 @@ This document outlines the implementation tasks for the CLI Menu Loop feature. T
 
 **Independent Test**: The application can be started and presents a menu of options to the user. The user can select options and perform actions. The application continues running until the user exits via the specified methods (x/X twice, ESC key, or selecting exit option).
 
-- [ ] T011 [US1] Implement basic menu loop in cli_app.py that runs continuously
-- [ ] T012 [US1] Display menu options to the user with numbered/lettered list (1. Add Task, 2. List Tasks, 3. Update Task, 4. Delete Task, 5. Exit)
-- [ ] T013 [US1] Accept user input via standard input() function
-- [ ] T014 [US1] Process user selection and return to menu after action
-- [ ] T015 [US1] Implement exit functionality when user selects 'exit' option
-- [ ] T016 [US1] Implement exit functionality when user presses 'x' or 'X' twice
-- [ ] T017 [US1] Implement exit functionality when user presses ESC key
-- [ ] T018 [US1] Add clear instructions on how to exit the application
+- [X] T011 [US1] Implement basic menu loop in cli_app.py that runs continuously
+- [X] T012 [US1] Display menu options to the user with numbered/lettered list (1. Add Task, 2. List Tasks, 3. Update Task, 4. Delete Task, 5. Exit)
+- [X] T013 [US1] Accept user input via standard input() function
+- [X] T014 [US1] Process user selection and return to menu after action
+- [X] T015 [US1] Implement exit functionality when user selects 'exit' option
+- [X] T016 [US1] Implement exit functionality when user presses 'x' or 'X' twice
+- [X] T017 [US1] Implement exit functionality when user presses ESC key
+- [X] T018 [US1] Add clear instructions on how to exit the application
 
 ## Phase 4: User Story 2 - Menu Navigation (Priority: P1)
 
@@ -58,16 +58,16 @@ This document outlines the implementation tasks for the CLI Menu Loop feature. T
 
 **Independent Test**: The menu displays all available options clearly, and each option leads to the appropriate functionality when selected.
 
-- [ ] T019 [US2] Implement 'add task' functionality in todo_service.py
-- [ ] T020 [US2] Implement 'list tasks' functionality in todo_service.py
-- [ ] T021 [US2] Implement 'update task' functionality in todo_service.py
-- [ ] T022 [US2] Implement 'delete task' functionality in todo_service.py
-- [ ] T023 [US2] Integrate 'add task' option with CLI menu
-- [ ] T024 [US2] Integrate 'list tasks' option with CLI menu
-- [ ] T025 [US2] Integrate 'update task' option with CLI menu
-- [ ] T026 [US2] Integrate 'delete task' option with CLI menu
-- [ ] T027 [US2] Implement data persistence for all operations using file_storage.py
-- [ ] T028 [US2] Add input validation for all user inputs
+- [X] T019 [US2] Implement 'add task' functionality in todo_service.py
+- [X] T020 [US2] Implement 'list tasks' functionality in todo_service.py
+- [X] T021 [US2] Implement 'update task' functionality in todo_service.py
+- [X] T022 [US2] Implement 'delete task' functionality in todo_service.py
+- [X] T023 [US2] Integrate 'add task' option with CLI menu
+- [X] T024 [US2] Integrate 'list tasks' option with CLI menu
+- [X] T025 [US2] Integrate 'update task' option with CLI menu
+- [X] T026 [US2] Integrate 'delete task' option with CLI menu
+- [X] T027 [US2] Implement data persistence for all operations using file_storage.py
+- [X] T028 [US2] Add input validation for all user inputs
 
 ## Phase 5: User Story 3 - Exit Confirmation (Priority: P2)
 
@@ -75,33 +75,33 @@ This document outlines the implementation tasks for the CLI Menu Loop feature. T
 
 **Independent Test**: When the user triggers an exit sequence (like pressing 'x' once), the application prompts for confirmation before exiting.
 
-- [ ] T029 [US3] Implement exit confirmation flag tracking in cli_app.py
-- [ ] T030 [US3] Add confirmation prompt when user presses 'x' or 'X' once
-- [ ] T031 [US3] Exit application only on second consecutive 'x' or 'X' press
-- [ ] T032 [US3] Update application state to track exit confirmation status
-- [ ] T033 [US3] Ensure exit confirmation doesn't interfere with other operations
+- [X] T029 [US3] Implement exit confirmation flag tracking in cli_app.py
+- [X] T030 [US3] Add confirmation prompt when user presses 'x' or 'X' once
+- [X] T031 [US3] Exit application only on second consecutive 'x' or 'X' press
+- [X] T032 [US3] Update application state to track exit confirmation status
+- [X] T033 [US3] Ensure exit confirmation doesn't interfere with other operations
 
 ## Phase 6: Error Handling & Edge Cases
 
-- [ ] T034 Implement graceful handling of invalid menu selections
-- [ ] T035 Implement error handling for file access issues during data persistence
-- [ ] T036 Implement error handling for unexpected operation errors
-- [ ] T037 Add error messages that return to menu after displaying error
-- [ ] T038 Handle interruption during data input (e.g., Ctrl+C)
+- [X] T034 Implement graceful handling of invalid menu selections
+- [X] T035 Implement error handling for file access issues during data persistence
+- [X] T036 Implement error handling for unexpected operation errors
+- [X] T037 Add error messages that return to menu after displaying error
+- [X] T038 Handle interruption during data input (e.g., Ctrl+C)
 
 ## Phase 7: Performance & Quality Requirements
 
-- [ ] T039 Add performance monitoring to ensure application starts within 2 seconds
-- [ ] T040 Add performance monitoring to ensure list operations complete within 100ms for up to 1000 tasks
-- [ ] T041 Add performance monitoring to ensure storage operations complete reliably without blocking UI
+- [X] T039 Add performance monitoring to ensure application starts within 2 seconds
+- [X] T040 Add performance monitoring to ensure list operations complete within 100ms for up to 1000 tasks
+- [X] T041 Add performance monitoring to ensure storage operations complete reliably without blocking UI
 
 ## Phase 8: Polish & Cross-Cutting Concerns
 
-- [ ] T042 Update quickstart guide with new menu functionality
-- [ ] T043 Add type hints to all functions and methods
-- [ ] T044 Ensure code follows PEP 8 style guidelines
-- [ ] T045 Write comprehensive unit tests for all components
-- [ ] T046 Write integration tests for CLI menu functionality
-- [ ] T047 Perform final testing of all user stories
-- [ ] T048 Update documentation as needed
-- [ ] T049 Add user feedback mechanism to measure interface intuitiveness
+- [X] T042 Update quickstart guide with new menu functionality
+- [X] T043 Add type hints to all functions and methods
+- [X] T044 Ensure code follows PEP 8 style guidelines
+- [X] T045 Write comprehensive unit tests for all components
+- [X] T046 Write integration tests for CLI menu functionality
+- [X] T047 Perform final testing of all user stories
+- [X] T048 Update documentation as needed
+- [X] T049 Add user feedback mechanism to measure interface intuitiveness

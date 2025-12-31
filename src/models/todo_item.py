@@ -30,7 +30,8 @@ class TodoItem:
 
         # Validate description using utility function
         if not validate_task_description(self.description):
-            raise ValueError("Task description cannot be empty or whitespace only")
+            from src.utils.handlers import InvalidTaskDescriptionError
+            raise InvalidTaskDescriptionError()
 
         # Sanitize description to remove any problematic special characters if needed
         self.description = self.description.strip()
@@ -39,15 +40,25 @@ class TodoItem:
         """
         Mark the task as complete and update the timestamp.
         """
+        from datetime import datetime, timedelta
         self.completed = True
-        self.updated_at = datetime.now()
+        # Ensure the updated_at time is later than the previous time
+        new_time = datetime.now()
+        if new_time <= self.updated_at:
+            new_time = self.updated_at + timedelta(microseconds=1)
+        self.updated_at = new_time
     
     def mark_incomplete(self):
         """
         Mark the task as incomplete and update the timestamp.
         """
+        from datetime import datetime, timedelta
         self.completed = False
-        self.updated_at = datetime.now()
+        # Ensure the updated_at time is later than the previous time
+        new_time = datetime.now()
+        if new_time <= self.updated_at:
+            new_time = self.updated_at + timedelta(microseconds=1)
+        self.updated_at = new_time
     
     def update_description(self, new_description: str):
         """
@@ -57,10 +68,16 @@ class TodoItem:
             new_description: New description for the task
         """
         if not validate_task_description(new_description):
-            raise ValueError("Task description cannot be empty or whitespace only")
+            from src.utils.handlers import InvalidTaskDescriptionError
+            raise InvalidTaskDescriptionError()
 
         self.description = new_description.strip()
-        self.updated_at = datetime.now()
+        from datetime import datetime, timedelta
+        # Ensure the updated_at time is later than the previous time
+        new_time = datetime.now()
+        if new_time <= self.updated_at:
+            new_time = self.updated_at + timedelta(microseconds=1)
+        self.updated_at = new_time
     
     def to_dict(self) -> dict:
         """

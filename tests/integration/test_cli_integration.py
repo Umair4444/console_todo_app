@@ -297,8 +297,7 @@ class TestImportExportIntegration:
         assert "1. [○] Task 1" in captured.out  # Incomplete task
         assert "2. [✓] Task 2" in captured.out  # Completed task
         assert "3. [○] Task 3" in captured.out  # Incomplete task
-        
-        finally:
-            # Clean up temporary file
-            if os.path.exists(export_path):
-                os.remove(export_path)
+
+        # Clean up temporary file
+        if os.path.exists(export_path):
+            os.remove(export_path)
