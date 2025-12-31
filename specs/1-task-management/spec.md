@@ -13,7 +13,7 @@
 - Q: What data import/export format should be supported? → A: JSON format
 - Q: How should reliability and recovery be handled? → A: Ensure data integrity through atomic writes
 - Q: Should accessibility features be included? → A: No, not required for initial version
-- Q: What is the maximum expected task list size? → A: Support up to 10,000 tasks
+- Q: What is the maximum expected task list size? → A: Support up to 1,000 tasks
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -93,10 +93,11 @@ As a user, I want to delete tasks from my list so that I can remove items that a
 ### Edge Cases
 
 - What happens when a user tries to update/delete a task that doesn't exist?
-- How does the system handle very long task descriptions?
-- What happens when the task list is very large (up to 10,000 tasks)?
-- How does the system handle special characters in task descriptions?
+- How does the system handle very long task descriptions? (max 1000 characters)
+- What happens when the task list is very large (up to 1,000 tasks)?
+- How does the system handle special characters in task descriptions? (sanitize and validate)
 - How does the system ensure data integrity during unexpected shutdowns?
+- How does the system handle concurrent access? (single-user access only)
 
 ## Requirements *(mandatory)*
 
@@ -105,10 +106,10 @@ As a user, I want to delete tasks from my list so that I can remove items that a
 - **FR-001**: System MUST allow users to add new tasks with a description via CLI command
 - **FR-002**: System MUST display all tasks in a formatted list via CLI command
 - **FR-003**: System MUST allow users to mark tasks as complete/incomplete via CLI command
-- **FR-004**: System MUST allow users to update task details via CLI command
+- **FR-004**: System MUST allow users to update task description details via CLI command
 - **FR-005**: System MUST allow users to delete tasks via CLI command
 - **FR-006**: System MUST persist tasks to local storage between application sessions
-- **FR-007**: System MUST validate user input and provide clear error messages
+- **FR-007**: System MUST validate user input and provide clear error messages in the format "Error: [specific issue] - [action to resolve]"
 - **FR-008**: System MUST assign unique identifiers to each task for referencing
 - **FR-009**: System MUST support importing tasks from JSON format
 - **FR-010**: System MUST support exporting tasks to JSON format
@@ -123,7 +124,7 @@ As a user, I want to delete tasks from my list so that I can remove items that a
 ### Measurable Outcomes
 
 - **SC-001**: Users can add a new task in under 5 seconds
-- **SC-002**: Users can view all tasks in under 3 seconds even with 10,000 tasks in the list
+- **SC-002**: Users can view all tasks in under 100ms even with 1,000 tasks in the list
 - **SC-003**: 95% of user commands result in successful operations without errors
 - **SC-004**: Users can successfully complete the primary workflow (add, view, mark complete) in under 2 minutes when first using the application
 - **SC-005**: System maintains data integrity during unexpected shutdowns with atomic write operations

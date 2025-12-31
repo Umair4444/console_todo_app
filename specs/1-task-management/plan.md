@@ -13,13 +13,14 @@ Implementation of core task management functionality for the console-based To-Do
 
 **Language/Version**: Python 3.8+
 **Primary Dependencies**: argparse (for CLI), pytest (for testing), JSON (for storage)
-**Storage**: Local JSON file with atomic write operations
+**Storage**: Local JSON file with atomic write operations using temporary file approach
 **Testing**: pytest with unit and integration tests
 **Target Platform**: Cross-platform (Windows, macOS, Linux)
 **Project Type**: Single console application
-**Performance Goals**: Application starts within 2 seconds, List operations complete within 3 seconds for up to 10,000 tasks
+**Performance Goals**: Application starts within 2 seconds, List operations complete within 100ms for up to 1,000 tasks
+**Data Integrity**: Atomic write operations will use a temporary file approach where data is written to a temporary file first, then renamed to the target file to ensure atomicity and prevent data corruption during unexpected shutdowns
 **Constraints**: <100MB memory, offline-capable, CLI-focused
-**Scale/Scope**: Individual user, single-machine application supporting up to 10,000 tasks
+**Scale/Scope**: Individual user, single-machine application supporting up to 1,000 tasks
 
 ## Constitution Check
 
