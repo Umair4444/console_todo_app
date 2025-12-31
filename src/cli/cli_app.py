@@ -147,7 +147,7 @@ Examples:
         
         # Print formatted task list
         for task in tasks:
-            status = "✓" if task.completed else "○"
+            status = "X" if task.completed else "O"
             print(f"{task.id}. [{status}] {task.description}")
         
         return 0

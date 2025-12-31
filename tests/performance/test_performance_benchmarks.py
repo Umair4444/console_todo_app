@@ -7,7 +7,7 @@ import time
 from pathlib import Path
 from src.services.todo_service import TodoService
 from src.storage.file_storage import FileStorage
-from src.config.settings import Settings
+from config.settings import Settings
 
 
 class TestPerformanceBenchmarks:

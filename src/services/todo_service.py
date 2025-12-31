@@ -5,7 +5,7 @@ from typing import List, Optional
 from src.models.todo_item import TodoItem
 from src.storage.file_storage import FileStorage
 from src.utils.handlers import TaskNotFoundError, InvalidTaskDescriptionError
-from src.config.settings import Settings
+from config.settings import Settings
 from src.utils.performance import measure_time
 from src.utils.validation import validate_task_description
 import json
