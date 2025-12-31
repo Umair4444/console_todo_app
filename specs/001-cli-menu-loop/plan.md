@@ -1,0 +1,94 @@
+# Implementation Plan: CLI Menu Loop
+
+**Branch**: `001-cli-menu-loop` | **Date**: Wednesday, December 31, 2025 | **Spec**: [link to spec]
+**Input**: Feature specification from `/specs/001-cli-menu-loop/spec.md`
+
+**Note**: This template is filled in by the `/sp.plan` command. See `.specify/templates/commands/plan.md` for the execution workflow.
+
+## Summary
+
+Implement a CLI menu loop system that allows users to interact with the todo application through a continuous menu system. The application will present options to the user, allow selection of options, and continue running until the user explicitly chooses to exit using one of the specified methods (x/X twice, ESC key, or selecting exit option). The implementation will use standard input for user interaction and local file storage for data persistence.
+
+## Technical Context
+
+**Language/Version**: Python 3.8+
+**Primary Dependencies**: argparse or click, pytest, JSON for storage
+**Storage**: Local JSON file system
+**Testing**: pytest
+**Target Platform**: Cross-platform (Windows, macOS, Linux)
+**Project Type**: Single console application
+**Performance Goals**: Application starts within 2 seconds, List operations complete within 100ms for up to 1000 tasks, Storage operations complete reliably without blocking UI
+**Constraints**: <100MB memory, offline-capable, CLI-focused
+**Scale/Scope**: Individual user, single-machine application
+
+## Constitution Check
+
+*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+
+- Clean CLI Interface: Verify all user interactions follow CLI best practices - YES, menu system will provide clear options and feedback
+- Persistent Local Storage: Confirm data persistence approach aligns with requirements - YES, using JSON file storage as specified
+- Test-First: Ensure test strategy includes comprehensive unit and integration tests - YES, following TDD approach
+- Python Best Practices: Verify code follows PEP 8, type hints, and modular design - YES, following established patterns
+- Error Handling: Confirm error handling strategy is comprehensive - YES, displaying error messages and returning to menu
+- Modularity: Verify architecture supports maintainability and future enhancements - YES, modular design with separation of concerns
+
+## Project Structure
+
+### Documentation (this feature)
+
+```text
+specs/001-cli-menu-loop/
+├── plan.md              # This file (/sp.plan command output)
+├── research.md          # Phase 0 output (/sp.plan command)
+├── data-model.md        # Phase 1 output (/sp.plan command)
+├── quickstart.md        # Phase 1 output (/sp.plan command)
+├── contracts/           # Phase 1 output (/sp.plan command)
+└── tasks.md             # Phase 2 output (/sp.tasks command - NOT created by /sp.plan)
+```
+
+### Source Code (repository root)
+
+```text
+# Single console application
+src/
+├── models/
+│   ├── __init__.py
+│   └── todo_item.py          # Defines the TodoItem data model
+├── services/
+│   ├── __init__.py
+│   └── todo_service.py       # Handles business logic for todo operations
+├── storage/
+│   ├── __init__.py
+│   └── file_storage.py       # Handles local file persistence
+├── cli/
+│   ├── __init__.py
+│   └── cli_app.py            # CLI interface and command routing
+└── __init__.py
+
+tests/
+├── unit/
+│   ├── test_models/
+│   ├── test_services/
+│   └── test_storage/
+├── integration/
+│   └── test_cli_integration.py
+└── conftest.py               # Test configuration
+
+config/
+├── __init__.py
+└── settings.py               # Application configuration
+
+docs/
+└── quickstart.md             # User quickstart guide
+```
+
+**Structure Decision**: Using the existing modular structure with models, services, storage, and CLI components to maintain separation of concerns and support the new menu loop functionality.
+
+## Complexity Tracking
+
+> **Fill ONLY if Constitution Check has violations that must be justified**
+
+| Violation | Why Needed | Simpler Alternative Rejected Because |
+|-----------|------------|-------------------------------------|
+| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
