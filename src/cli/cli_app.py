@@ -125,7 +125,8 @@ Examples:
         print("8. Import Tasks")
         print("9. Exit")
         print("="*40)
-        print("Tip: Press 'x' or 'X' twice to exit quickly, or 'ESC' key to exit")
+        print("Tip: Press 'x' or 'X' twice to exit quickly, select option 9 to exit,")
+        print("     or press Ctrl+C to exit immediately")
         print("Current status: " + ("Waiting for exit confirmation" if self.waiting_for_confirmation else "Running normally"))
     
     def process_menu_selection(self, user_input: str):
@@ -164,7 +165,9 @@ Examples:
             self.last_key_press = None
 
         # Handle ESC key (represented as \x1b in Python)
-        if user_input == '\x1b':  # ESC character
+        # On Windows and other systems, ESC might be captured as a standalone character
+        # or as part of a sequence
+        if user_input == '\x1b' or user_input.startswith('\x1b'):  # ESC character or sequence
             print("ESC pressed. Exiting application...")
             self.running = False
             return
