@@ -102,6 +102,6 @@ class TestDeleteCommand:
         
         # Verify the deleted task is not in the list
         captured = capsys.readouterr()
-        assert "2. [○] Finish report" not in captured.out  # Task #2 should be gone
-        assert "1. [○] Buy groceries" in captured.out     # Task #1 should still be there
-        assert "3. [○] Call mom" in captured.out          # Task #3 should still be there
+        assert "2. [✗] Finish report" not in captured.out  # Task #2 should be gone
+        assert "1. [✗] Buy groceries" in captured.out     # Task #1 should still be there
+        assert "3. [✗] Call mom" in captured.out          # Task #3 should still be there

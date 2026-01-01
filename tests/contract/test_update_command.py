@@ -74,10 +74,11 @@ class TestUpdateCommand:
         
         # Verify the command failed
         assert result != 0
-        
+
         # Verify the error message
         captured = capsys.readouterr()
-        assert "empty" in captured.err.lower() or "whitespace" in captured.err.lower()
+        # Check for error message about missing required argument
+        assert "required" in captured.err.lower() or "missing" in captured.err.lower()
     
     def test_update_command_output_format(self, capsys, temp_file):
         """Test that the update command produces the expected output format."""

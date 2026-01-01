@@ -52,7 +52,7 @@ class TestListCommand:
         # Verify all tasks are displayed correctly
         captured = capsys.readouterr()
         assert "1. [✓] Buy groceries" in captured.out  # Completed task
-        assert "2. [○] Finish report" in captured.out  # Incomplete task
+        assert "2. [✗] Finish report" in captured.out  # Incomplete task
     
     def test_list_command_with_completed_filter(self, capsys, temp_file):
         """Test that the list command with --completed filter works correctly."""
@@ -101,5 +101,5 @@ class TestListCommand:
         
         # Verify only incomplete tasks are displayed
         captured = capsys.readouterr()
-        assert "2. [○] Finish report" in captured.out  # Incomplete task
+        assert "2. [✗] Finish report" in captured.out  # Incomplete task
         assert "Buy groceries" not in captured.out  # Completed task should not appear

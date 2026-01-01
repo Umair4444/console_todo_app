@@ -4,6 +4,23 @@ from typing import List, Optional
 from src.services.todo_service import TodoService
 from src.models.todo_item import TodoItem
 
+import functools
+
+# Create a custom print function that handles encoding properly
+def safe_print(*args, **kwargs):
+    """Print function that handles Unicode characters properly on all platforms."""
+    try:
+        print(*args, **kwargs)
+    except UnicodeEncodeError:
+        # Replace Unicode characters with ASCII equivalents
+        safe_args = []
+        for arg in args:
+            if isinstance(arg, str):
+                # Replace common Unicode characters with ASCII equivalents
+                arg = arg.replace('✓', 'X').replace('✗', 'O')
+            safe_args.append(arg)
+        print(*safe_args, **kwargs)
+
 
 class CLIApp:
     """
@@ -35,6 +52,7 @@ class CLIApp:
             prog='todo',
             description='A command-line interface application for managing to-do tasks',
             formatter_class=argparse.RawDescriptionHelpFormatter,
+            exit_on_error=False,  # Don't exit on error, raise exception instead
             epilog="""
 Examples:
   todo add "Buy groceries"
@@ -239,8 +257,8 @@ Examples:
 
             # Print formatted task list
             for task in tasks:
-                status = "✓" if task.completed else "○"
-                print(f"{task.id}. [{status}] {task.description}")
+                status = "✓" if task.completed else "✗"
+                safe_print(f"{task.id}. [{status}] {task.description}")
         except Exception as e:
             print(f"Error listing tasks: {e}")
 
@@ -361,28 +379,37 @@ Examples:
 
             # If arguments are provided, use the original CLI command approach
             if args:
-                parsed_args = self.parser.parse_args(args)
+                try:
+                    # Parse arguments without exiting on error
+                    parsed_args = self.parser.parse_args(args)
 
-                # Handle each command
-                if parsed_args.command == 'add':
-                    return self._handle_add(parsed_args)
-                elif parsed_args.command == 'list':
-                    return self._handle_list(parsed_args)
-                elif parsed_args.command == 'update':
-                    return self._handle_update(parsed_args)
-                elif parsed_args.command == 'complete':
-                    return self._handle_complete(parsed_args)
-                elif parsed_args.command == 'incomplete':
-                    return self._handle_incomplete(parsed_args)
-                elif parsed_args.command == 'delete':
-                    return self._handle_delete(parsed_args)
-                elif parsed_args.command == 'export':
-                    return self._handle_export(parsed_args)
-                elif parsed_args.command == 'import':
-                    return self._handle_import(parsed_args)
-                else:
+                    # Handle each command
+                    if parsed_args.command == 'add':
+                        return self._handle_add(parsed_args)
+                    elif parsed_args.command == 'list':
+                        return self._handle_list(parsed_args)
+                    elif parsed_args.command == 'update':
+                        return self._handle_update(parsed_args)
+                    elif parsed_args.command == 'complete':
+                        return self._handle_complete(parsed_args)
+                    elif parsed_args.command == 'incomplete':
+                        return self._handle_incomplete(parsed_args)
+                    elif parsed_args.command == 'delete':
+                        return self._handle_delete(parsed_args)
+                    elif parsed_args.command == 'export':
+                        return self._handle_export(parsed_args)
+                    elif parsed_args.command == 'import':
+                        return self._handle_import(parsed_args)
+                    else:
+                        self.parser.print_help()
+                        return 1
+                except SystemExit:
+                    # argparse may still raise SystemExit in some cases, catch and return error code
+                    return 2
+                except argparse.ArgumentError as e:
+                    print(f"Error parsing arguments: {e}", file=sys.stderr)
                     self.parser.print_help()
-                    return 1
+                    return 2
             else:
                 # No arguments provided, run the interactive menu loop
                 self.run_menu_loop()
@@ -413,8 +440,8 @@ Examples:
         
         # Print formatted task list
         for task in tasks:
-            status = "✓" if task.completed else "○"
-            print(f"{task.id}. [{status}] {task.description}")
+            status = "✓" if task.completed else "✗"
+            safe_print(f"{task.id}. [{status}] {task.description}")
         
         return 0
     

@@ -34,7 +34,7 @@ class TestAddTaskIntegration:
         
         # Capture and verify the list output
         captured = capsys.readouterr()
-        assert "1. [○] Buy groceries" in captured.out  # ○ indicates incomplete task
+        assert "1. [✗] Buy groceries" in captured.out  # ✗ indicates incomplete task
     
     def test_add_multiple_tasks_then_list_all(self, capsys, temp_file):
         """Test adding multiple tasks and then listing them all."""
@@ -62,9 +62,9 @@ class TestAddTaskIntegration:
         captured = capsys.readouterr()
         
         # Verify all tasks are present
-        assert "1. [○] Buy groceries" in captured.out
-        assert "2. [○] Finish report" in captured.out
-        assert "3. [○] Call mom" in captured.out
+        assert "1. [✗] Buy groceries" in captured.out
+        assert "2. [✗] Finish report" in captured.out
+        assert "3. [✗] Call mom" in captured.out
     
     def test_add_task_then_mark_complete_then_list(self, capsys, temp_file):
         """Test adding a task, marking it complete, then listing."""
@@ -158,7 +158,7 @@ class TestMarkCompleteIntegration:
         # Verify all tasks are listed with correct status
         captured = capsys.readouterr()
         assert "1. [✓] Buy groceries" in captured.out  # Completed
-        assert "2. [○] Finish report" in captured.out  # Incomplete
+        assert "2. [✗] Finish report" in captured.out  # Incomplete
         assert "3. [✓] Call mom" in captured.out      # Completed
 
         # List only completed tasks
@@ -177,7 +177,7 @@ class TestMarkCompleteIntegration:
 
         # Verify only incomplete tasks are listed
         captured = capsys.readouterr()
-        assert "2. [○] Finish report" in captured.out
+        assert "2. [✗] Finish report" in captured.out
         assert "Buy groceries" not in captured.out
         assert "Call mom" not in captured.out
 
@@ -236,7 +236,7 @@ class TestImportExportIntegration:
             # Verify the tasks are present with correct status
             captured = capsys.readouterr()
             assert "1. [✓] Buy groceries" in captured.out  # Completed task
-            assert "2. [○] Finish report" in captured.out  # Incomplete task
+            assert "2. [✗] Finish report" in captured.out  # Incomplete task
         finally:
             # Clean up temporary files
             if os.path.exists(import_path):
@@ -294,9 +294,9 @@ class TestImportExportIntegration:
         
         # Verify all tasks are present with correct status
         captured = capsys.readouterr()
-        assert "1. [○] Task 1" in captured.out  # Incomplete task
+        assert "1. [✗] Task 1" in captured.out  # Incomplete task
         assert "2. [✓] Task 2" in captured.out  # Completed task
-        assert "3. [○] Task 3" in captured.out  # Incomplete task
+        assert "3. [✗] Task 3" in captured.out  # Incomplete task
 
         # Clean up temporary file
         if os.path.exists(export_path):
