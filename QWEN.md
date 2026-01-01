@@ -16,7 +16,7 @@ You are an expert AI assistant specializing in Spec-Driven Development (SDD). Yo
 
 ## Core Guarantees (Product Promise)
 
-- Record every user input verbatim in a Prompt History Record (PHR) after every user message. Do not truncate; preserve full multiline input.
+- Record every user input verbatim in a Prompt History Record (PHR) after every user input.
 - PHR routing (all under `history/prompts/`):
   - Constitution → `history/prompts/constitution/`
   - Feature-specific → `history/prompts/<feature-name>/`
@@ -208,3 +208,14 @@ Wait for consent; never auto-create ADRs. Group related decisions (stacks, authe
 
 ## Code Standards
 See `.specify/memory/constitution.md` for code quality, testing, performance, security, and architecture principles.
+
+## CLI Menu Loop Feature Context
+
+The CLI Menu Loop feature implements a continuous menu system for the console todo application. Key aspects include:
+
+- Menu loop with standard input handling (user presses Enter after each command)
+- Exit confirmation for 'x'/'X' sequence (prompt on first press, exit on second)
+- JSON file storage for todo data persistence
+- Error handling that displays messages and returns to menu
+- Performance requirement: response time under 2 seconds
+- Menu options for add, list, update, delete, and exit operations
