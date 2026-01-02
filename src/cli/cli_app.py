@@ -3,8 +3,16 @@ import sys
 from typing import List, Optional
 from src.services.todo_service import TodoService
 from src.models.todo_item import TodoItem
+from rich.console import Console
+from rich.table import Table
+from rich.text import Text
+from rich.prompt import Prompt
+from rich import print as rich_print
 
 import functools
+
+# Initialize rich console
+console = Console()
 
 # Create a custom print function that handles encoding properly
 def safe_print(*args, **kwargs):
@@ -109,10 +117,10 @@ Examples:
 
     def run_menu_loop(self):
         """
-        Run the interactive menu loop for the CLI application.
+        Run the interactive menu loop for the CLI application with rich formatting.
         """
-        print("Welcome to the To-Do List Application!")
-        print("Please select an option from the menu below:")
+        console.print("[bold green]Welcome to the To-Do List Application![/bold green]")
+        console.print("[blue]Please select an option from the menu below:[/blue]")
 
         while self.running:
             self.display_menu()
@@ -120,36 +128,77 @@ Examples:
                 user_input = input("\nEnter your choice: ").strip().lower()
                 self.process_menu_selection(user_input)
             except KeyboardInterrupt:
-                print("\n\nApplication interrupted. Goodbye!")
+                console.print("\n\n[red]Application interrupted. Goodbye![/red]")
                 break
             except EOFError:
-                print("\n\nEnd of input. Goodbye!")
+                console.print("\n\n[red]End of input. Goodbye![/red]")
                 break
+
+    def execute_menu_option(self, option_num):
+        """
+        Execute the menu option based on the selected number.
+
+        Args:
+            option_num: The selected menu option number (1-9)
+        """
+        if option_num == 1:
+            self._handle_menu_add()
+        elif option_num == 2:
+            self._handle_menu_list()
+        elif option_num == 3:
+            self._handle_menu_update()
+        elif option_num == 4:
+            self._handle_menu_delete()
+        elif option_num == 5:
+            self._handle_menu_complete()
+        elif option_num == 6:
+            self._handle_menu_incomplete()
+        elif option_num == 7:
+            self._handle_menu_export()
+        elif option_num == 8:
+            self._handle_menu_import()
+        elif option_num == 9:
+            self._handle_menu_exit()
+        else:
+            console.print(f"[red]Invalid option: {option_num}. Please enter a number between 1-9.[/red]")
 
     def display_menu(self):
         """
-        Display the menu options to the user.
+        Display the menu options to the user with rich formatting.
         """
-        print("\n" + "="*40)
-        print("TO-DO LIST APPLICATION")
-        print("="*40)
-        print("1. Add Task")
-        print("2. List Tasks")
-        print("3. Update Task")
-        print("4. Delete Task")
-        print("5. Mark Task Complete")
-        print("6. Mark Task Incomplete")
-        print("7. Export Tasks")
-        print("8. Import Tasks")
-        print("9. Exit")
-        print("="*40)
-        print("Tip: Press 'x' or 'X' twice to exit quickly, select option 9 to exit,")
-        print("     or press Ctrl+C to exit immediately")
-        print("Current status: " + ("Waiting for exit confirmation" if self.waiting_for_confirmation else "Running normally"))
+        console.print("\n[bold blue]┌─────────────────────────────────────┐[/bold blue]")
+        console.print("[bold blue]│        📋 TO-DO LIST APP           │[/bold blue]")
+        console.print("[bold blue]└─────────────────────────────────────┘[/bold blue]")
+
+        # Create a rich table for menu options
+        table = Table(show_header=False, box=None)
+        table.add_column(style="dim cyan", no_wrap=True)
+        table.add_column(style="green")
+
+        table.add_row("1", "➕ Add Task")
+        table.add_row("2", "📋 List Tasks")
+        table.add_row("3", "✏️ Update Task")
+        table.add_row("4", "🗑️ Delete Task")
+        table.add_row("5", "✅ Mark Task Complete")
+        table.add_row("6", "↩️ Mark Task Incomplete")
+        table.add_row("7", "📤 Export Tasks")
+        table.add_row("8", "📥 Import Tasks")
+        table.add_row("9", "🚪 Exit")
+
+        console.print(table)
+
+        console.print("\n[yellow]💡 Tip:[/yellow] Enter option number (1-9) to select")
+        console.print("       Press 'x' twice or 'Ctrl+C' to exit")
+
+        status_text = "⚠️ WAITING FOR EXIT CONFIRMATION" if self.waiting_for_confirmation else "✅ RUNNING"
+        console.print(f"\n[bold]Status:[/bold] {status_text}")
+        console.print(f"[bold blue]┌─────────────────────────────────────────────────────────┐[/bold blue]")
+        console.print(f"[bold blue]│[/bold blue] [bold]Enter number to select option[/bold]                         [bold blue]│[/bold blue]")
+        console.print(f"[bold blue]└─────────────────────────────────────────────────────────┘[/bold blue]")
     
     def process_menu_selection(self, user_input: str):
         """
-        Process the user's menu selection.
+        Process the user's menu selection with rich formatting.
 
         Args:
             user_input: The user's input from the menu
@@ -157,11 +206,11 @@ Examples:
         # Handle exit confirmation logic
         if self.waiting_for_confirmation:
             if user_input in ['x', 'yes', 'y']:
-                print("Exiting application...")
+                console.print("[red]Exiting application...[/red]")
                 self.running = False
                 return
             else:
-                print("Exit cancelled.")
+                console.print("[yellow]Exit cancelled.[/yellow]")
                 self.waiting_for_confirmation = False
                 return
 
@@ -169,12 +218,12 @@ Examples:
         if user_input == 'x':
             if self.last_key_press == 'x':
                 # Double 'x' pressed, exit immediately
-                print("Exiting application...")
+                console.print("[red]Exiting application...[/red]")
                 self.running = False
                 return
             else:
                 # First 'x' pressed, wait for confirmation or set flag
-                print("Press 'x' again to confirm exit, or any other key to cancel")
+                console.print("[yellow]Press 'x' again to confirm exit, or any other key to cancel[/yellow]")
                 self.waiting_for_confirmation = True
                 self.last_key_press = 'x'
                 return
@@ -186,7 +235,7 @@ Examples:
         # On Windows and other systems, ESC might be captured as a standalone character
         # or as part of a sequence
         if user_input == '\x1b' or user_input.startswith('\x1b'):  # ESC character or sequence
-            print("ESC pressed. Exiting application...")
+            console.print("[red]ESC pressed. Exiting application...[/red]")
             self.running = False
             return
 
@@ -194,50 +243,32 @@ Examples:
         try:
             choice = int(user_input)
         except ValueError:
-            print(f"Invalid option: '{user_input}'. Please enter a number between 1-9.")
+            console.print(f"[red]Invalid option: '{user_input}'. Please enter a number between 1-9.[/red]")
             return
 
-        if choice == 1:
-            self._handle_menu_add()
-        elif choice == 2:
-            self._handle_menu_list()
-        elif choice == 3:
-            self._handle_menu_update()
-        elif choice == 4:
-            self._handle_menu_delete()
-        elif choice == 5:
-            self._handle_menu_complete()
-        elif choice == 6:
-            self._handle_menu_incomplete()
-        elif choice == 7:
-            self._handle_menu_export()
-        elif choice == 8:
-            self._handle_menu_import()
-        elif choice == 9:
-            self._handle_menu_exit()
-        else:
-            print(f"Invalid option: {choice}. Please enter a number between 1-9.")
+        # Execute the selected menu option
+        self.execute_menu_option(choice)
 
     def _handle_menu_add(self):
-        """Handle adding a task via the menu."""
+        """Handle adding a task via the menu with rich formatting."""
         try:
             description = input("Enter task description: ").strip()
             if not description:
-                print("Task description cannot be empty.")
+                console.print("[red]Task description cannot be empty.[/red]")
                 return
 
             task = self.service.add_task(description)
-            print(f"Added task #{task.id}: {task.description}")
+            console.print(f"[green]Added task #[/green][bold]{task.id}[/bold][green]: {task.description}[/green]")
         except Exception as e:
-            print(f"Error adding task: {e}")
+            console.print(f"[red]Error adding task: {e}[/red]")
 
     def _handle_menu_list(self):
-        """Handle listing tasks via the menu."""
+        """Handle listing tasks via the menu with rich formatting."""
         try:
-            print("\nSelect list option:")
-            print("1. All tasks")
-            print("2. Completed tasks only")
-            print("3. Incomplete tasks only")
+            console.print("\n[bold]Select list option:[/bold]")
+            console.print("1. All tasks")
+            console.print("2. Completed tasks only")
+            console.print("3. Incomplete tasks only")
 
             list_choice = input("Enter your choice (1-3): ").strip()
 
@@ -248,118 +279,127 @@ Examples:
             elif list_choice == '3':
                 tasks = self.service.get_incomplete_tasks()
             else:
-                print("Invalid choice. Showing all tasks.")
+                console.print("[yellow]Invalid choice. Showing all tasks.[/yellow]")
                 tasks = self.service.get_all_tasks()
 
             if not tasks:
-                print("No tasks found.")
+                console.print("[yellow]No tasks found.[/yellow]")
                 return
 
-            # Print formatted task list
+            # Create a rich table for tasks
+            table = Table(title="Tasks", show_header=True, header_style="bold magenta")
+            table.add_column("ID", style="cyan", no_wrap=True)
+            table.add_column("Status", style="green")
+            table.add_column("Description", style="white")
+
+            # Add tasks to the table
             for task in tasks:
-                status = "✓" if task.completed else "✗"
-                safe_print(f"{task.id}. [{status}] {task.description}")
+                status_emoji = "✅" if task.completed else "📝"
+                status_text = "[green]Completed[/green]" if task.completed else "[yellow]Active[/yellow]"
+                table.add_row(str(task.id), f"{status_emoji} {status_text}", task.description)
+
+            console.print(table)
         except Exception as e:
-            print(f"Error listing tasks: {e}")
+            console.print(f"[red]Error listing tasks: {e}[/red]")
 
     def _handle_menu_update(self):
-        """Handle updating a task via the menu."""
+        """Handle updating a task via the menu with rich formatting."""
         try:
             task_id = input("Enter task ID to update: ").strip()
             if not task_id:
-                print("Task ID cannot be empty.")
+                console.print("[red]Task ID cannot be empty.[/red]")
                 return
 
             task_id = int(task_id)
             description = input("Enter new task description: ").strip()
             if not description:
-                print("Task description cannot be empty.")
+                console.print("[red]Task description cannot be empty.[/red]")
                 return
 
             task = self.service.update_task(task_id, description)
-            print(f"Updated task #{task.id}: {task.description}")
+            console.print(f"[green]Updated task #[/green][bold]{task.id}[/bold][green]: {task.description}[/green]")
         except ValueError:
-            print("Invalid task ID. Please enter a number.")
+            console.print("[red]Invalid task ID. Please enter a number.[/red]")
         except Exception as e:
-            print(f"Error updating task: {e}")
+            console.print(f"[red]Error updating task: {e}[/red]")
 
     def _handle_menu_complete(self):
-        """Handle marking a task as complete via the menu."""
+        """Handle marking a task as complete via the menu with rich formatting."""
         try:
             task_id = input("Enter task ID to mark complete: ").strip()
             if not task_id:
-                print("Task ID cannot be empty.")
+                console.print("[red]Task ID cannot be empty.[/red]")
                 return
 
             task_id = int(task_id)
             task = self.service.mark_task_complete(task_id)
-            print(f"Marked task #{task.id} as complete: {task.description}")
+            console.print(f"[green]Marked task #[/green][bold]{task.id}[/bold][green] as complete: {task.description}[/green]")
         except ValueError:
-            print("Invalid task ID. Please enter a number.")
+            console.print("[red]Invalid task ID. Please enter a number.[/red]")
         except Exception as e:
-            print(f"Error marking task complete: {e}")
+            console.print(f"[red]Error marking task complete: {e}[/red]")
 
     def _handle_menu_incomplete(self):
-        """Handle marking a task as incomplete via the menu."""
+        """Handle marking a task as incomplete via the menu with rich formatting."""
         try:
             task_id = input("Enter task ID to mark incomplete: ").strip()
             if not task_id:
-                print("Task ID cannot be empty.")
+                console.print("[red]Task ID cannot be empty.[/red]")
                 return
 
             task_id = int(task_id)
             task = self.service.mark_task_incomplete(task_id)
-            print(f"Marked task #{task.id} as incomplete: {task.description}")
+            console.print(f"[green]Marked task #[/green][bold]{task.id}[/bold][green] as incomplete: {task.description}[/green]")
         except ValueError:
-            print("Invalid task ID. Please enter a number.")
+            console.print("[red]Invalid task ID. Please enter a number.[/red]")
         except Exception as e:
-            print(f"Error marking task incomplete: {e}")
+            console.print(f"[red]Error marking task incomplete: {e}[/red]")
 
     def _handle_menu_delete(self):
-        """Handle deleting a task via the menu."""
+        """Handle deleting a task via the menu with rich formatting."""
         try:
             task_id = input("Enter task ID to delete: ").strip()
             if not task_id:
-                print("Task ID cannot be empty.")
+                console.print("[red]Task ID cannot be empty.[/red]")
                 return
 
             task_id = int(task_id)
             task = self.service.delete_task(task_id)
-            print(f"Deleted task #{task.id}: {task.description}")
+            console.print(f"[red]Deleted task #[/red][bold]{task.id}[/bold][red]: {task.description}[/red]")
         except ValueError:
-            print("Invalid task ID. Please enter a number.")
+            console.print("[red]Invalid task ID. Please enter a number.[/red]")
         except Exception as e:
-            print(f"Error deleting task: {e}")
+            console.print(f"[red]Error deleting task: {e}[/red]")
 
     def _handle_menu_export(self):
-        """Handle exporting tasks via the menu."""
+        """Handle exporting tasks via the menu with rich formatting."""
         try:
             filename = input("Enter filename to export to: ").strip()
             if not filename:
-                print("Filename cannot be empty.")
+                console.print("[red]Filename cannot be empty.[/red]")
                 return
 
             count = self.service.export_tasks(filename)
-            print(f"Exported {count} tasks to {filename}")
+            console.print(f"[green]Exported {count} tasks to {filename}[/green]")
         except Exception as e:
-            print(f"Error exporting tasks: {e}")
+            console.print(f"[red]Error exporting tasks: {e}[/red]")
 
     def _handle_menu_import(self):
-        """Handle importing tasks via the menu."""
+        """Handle importing tasks via the menu with rich formatting."""
         try:
             filename = input("Enter filename to import from: ").strip()
             if not filename:
-                print("Filename cannot be empty.")
+                console.print("[red]Filename cannot be empty.[/red]")
                 return
 
             count = self.service.import_tasks(filename)
-            print(f"Imported {count} tasks from {filename}")
+            console.print(f"[green]Imported {count} tasks from {filename}[/green]")
         except Exception as e:
-            print(f"Error importing tasks: {e}")
+            console.print(f"[red]Error importing tasks: {e}[/red]")
 
     def _handle_menu_exit(self):
-        """Handle exiting the application via the menu."""
-        print("Exiting application...")
+        """Handle exiting the application via the menu with rich formatting."""
+        console.print("[red]Exiting application...[/red]")
         self.running = False
 
     def run(self, args: Optional[List[str]] = None) -> int:
@@ -419,91 +459,100 @@ Examples:
             return 1
     
     def _handle_add(self, args) -> int:
-        """Handle the 'add' command."""
+        """Handle the 'add' command with rich formatting."""
         description = ' '.join(args.description)
         task = self.service.add_task(description)
-        print(f"Added task #{task.id}: {task.description}")
+        console.print(f"[green]Added task #[/green][bold]{task.id}[/bold][green]: {task.description}[/green]")
         return 0
     
     def _handle_list(self, args) -> int:
-        """Handle the 'list' command."""
+        """Handle the 'list' command with rich formatting."""
         if args.completed:
             tasks = self.service.get_completed_tasks()
         elif args.incomplete:
             tasks = self.service.get_incomplete_tasks()
         else:
             tasks = self.service.get_all_tasks()
-        
+
         if not tasks:
-            print("No tasks found.")
+            console.print("[yellow]No tasks found.[/yellow]")
             return 0
-        
-        # Print formatted task list
+
+        # Create a rich table for tasks
+        table = Table(title="Tasks", show_header=True, header_style="bold magenta")
+        table.add_column("ID", style="cyan", no_wrap=True)
+        table.add_column("Status", style="green")
+        table.add_column("Description", style="white")
+
+        # Add tasks to the table
         for task in tasks:
-            status = "✓" if task.completed else "✗"
-            safe_print(f"{task.id}. [{status}] {task.description}")
-        
+            status_emoji = "✅" if task.completed else "📝"
+            status_text = "[green]Completed[/green]" if task.completed else "[yellow]Active[/yellow]"
+            table.add_row(str(task.id), f"{status_emoji} {status_text}", task.description)
+
+        console.print(table)
+
         return 0
     
     def _handle_update(self, args) -> int:
-        """Handle the 'update' command."""
+        """Handle the 'update' command with rich formatting."""
         description = ' '.join(args.description)
         try:
             task = self.service.update_task(args.id, description)
-            print(f"Updated task #{task.id}: {task.description}")
+            console.print(f"[green]Updated task #[/green][bold]{task.id}[/bold][green]: {task.description}[/green]")
             return 0
         except ValueError as e:
-            print(f"Error: {e}", file=sys.stderr)
+            console.print(f"[red]Error: {e}[/red]", file=sys.stderr)
             return 1
     
     def _handle_complete(self, args) -> int:
-        """Handle the 'complete' command."""
+        """Handle the 'complete' command with rich formatting."""
         try:
             task = self.service.mark_task_complete(args.id)
-            print(f"Marked task #{task.id} as complete: {task.description}")
+            console.print(f"[green]Marked task #[/green][bold]{task.id}[/bold][green] as complete: {task.description}[/green]")
             return 0
         except ValueError as e:
-            print(f"Error: {e}", file=sys.stderr)
+            console.print(f"[red]Error: {e}[/red]", file=sys.stderr)
             return 1
     
     def _handle_incomplete(self, args) -> int:
-        """Handle the 'incomplete' command."""
+        """Handle the 'incomplete' command with rich formatting."""
         try:
             task = self.service.mark_task_incomplete(args.id)
-            print(f"Marked task #{task.id} as incomplete: {task.description}")
+            console.print(f"[green]Marked task #[/green][bold]{task.id}[/bold][green] as incomplete: {task.description}[/green]")
             return 0
         except ValueError as e:
-            print(f"Error: {e}", file=sys.stderr)
+            console.print(f"[red]Error: {e}[/red]", file=sys.stderr)
             return 1
     
     def _handle_delete(self, args) -> int:
-        """Handle the 'delete' command."""
+        """Handle the 'delete' command with rich formatting."""
         try:
             task = self.service.delete_task(args.id)
-            print(f"Deleted task #{task.id}: {task.description}")
+            console.print(f"[red]Deleted task #[/red][bold]{task.id}[/bold][red]: {task.description}[/red]")
             return 0
         except ValueError as e:
-            print(f"Error: {e}", file=sys.stderr)
+            console.print(f"[red]Error: {e}[/red]", file=sys.stderr)
             return 1
     
     def _handle_export(self, args) -> int:
-        """Handle the 'export' command."""
+        """Handle the 'export' command with rich formatting."""
         try:
             count = self.service.export_tasks(args.filename)
-            print(f"Exported {count} tasks to {args.filename}")
+            console.print(f"[green]Exported {count} tasks to {args.filename}[/green]")
             return 0
         except Exception as e:
-            print(f"Error: {e}", file=sys.stderr)
+            console.print(f"[red]Error: {e}[/red]", file=sys.stderr)
             return 1
     
     def _handle_import(self, args) -> int:
-        """Handle the 'import' command."""
+        """Handle the 'import' command with rich formatting."""
         try:
             count = self.service.import_tasks(args.filename)
-            print(f"Imported {count} tasks from {args.filename}")
+            console.print(f"[green]Imported {count} tasks from {args.filename}[/green]")
             return 0
         except Exception as e:
-            print(f"Error: {e}", file=sys.stderr)
+            console.print(f"[red]Error: {e}[/red]", file=sys.stderr)
             return 1
 
 
